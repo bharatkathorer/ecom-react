@@ -1,29 +1,22 @@
 import FrontAuthLayout from "../layouts/FrontAuthLayout.tsx";
 import {useEffect, useState} from "react";
-import {makeUrl} from "../utils/const.tsx";
 import ProductComponent from "../components/ProductComponent.tsx";
+import productsApi from "../api/productsApi.ts";
 
 const WelcomePage = () => {
 
     const [products, setProducts] = useState<any>([]);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/products')
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();  // Assuming the response is in JSON format
-            })
-            .then((data) => {
-                if (data.success) {
-                    setProducts(data.data);
-                } // Handle the data from the API response
-            })
-            .catch((error) => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+        loadProducts();
     }, []);
+
+    const loadProducts = async () => {
+        const response: any = await productsApi.index();
+        if (response?.data?.success) {
+            setProducts(response?.data.data);
+        }
+    }
 
     return <FrontAuthLayout>
         <>
@@ -41,45 +34,3 @@ const WelcomePage = () => {
     </FrontAuthLayout>
 }
 export default WelcomePage;
-
-const products2 = [
-    {
-        id: 1,
-        name: 'Zip Tote Basket',
-        color: 'White and black',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-03-related-product-01.jpg',
-        imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
-        price: '$140',
-    },
-    {
-        id: 1,
-        name: 'Zip Tote Basket',
-        color: 'White and black',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-03-related-product-01.jpg',
-        imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
-        price: '$140',
-    },
-    {
-        id: 1,
-        name: 'Zip Tote Basket',
-        color: 'White and black',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-03-related-product-01.jpg',
-        imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
-        price: '$140',
-    },
-    {
-        id: 1,
-        name: 'Zip Tote Basket',
-        color: 'White and black',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-03-related-product-01.jpg',
-        imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
-        price: '$140',
-    },
-    // More products...
-]
-
-
