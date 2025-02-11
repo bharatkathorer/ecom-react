@@ -18,5 +18,13 @@ const orderApi = {
             return {};
         }
     },
+    update: async (data: any) => {
+        try {
+            return await axios.post(`/backend/orders`,data);
+        } catch (error) {
+            console.error(error);
+            return {};
+        }
+    },
 };
 export default orderApi;

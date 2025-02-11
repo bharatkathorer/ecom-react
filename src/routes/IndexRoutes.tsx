@@ -17,6 +17,8 @@ import ProductPage from "../pages/backend/products/ProductPage.tsx";
 import UserPage from "../pages/backend/users/UserPage.tsx";
 import CreateProductPage from "../pages/backend/products/CreateProductPage.tsx";
 import ViewOrderPage from "../pages/backend/orders/ViewOrderPage.tsx";
+import ViewProduct from "../pages/frontend/products/ViewProduct.tsx";
+import ViewOrder from "../pages/frontend/orders/ViewOrder.tsx";
 
 const IndexRoutes = () => {
     return (<>
@@ -24,6 +26,7 @@ const IndexRoutes = () => {
 
             {/* Public Routes */}
             <Route path="/" element={<WelcomePage/>}/>
+            <Route path="/:productId/product" element={<ViewProduct/>}/>
 
             <Route element={<GuestRoute/>}>
                 <Route path="/login" element={<LoginPage/>}/>
@@ -37,6 +40,7 @@ const IndexRoutes = () => {
             <Route element={<PrivateRoute/>}>
                 <Route path="/cart" element={<CartPage/>}/>
                 <Route path="/orders" element={<OrdersPage/>}/>
+                <Route path="/orders/:orderId" element={<ViewOrder/>}/>
             </Route>
 
             {/* Private Routes */}

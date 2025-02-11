@@ -10,6 +10,14 @@ const productsApi = {
             return {};
         }
     },
+    find: async (productId: any = 1) => {
+        try {
+            return await axios.get(`/products/${productId}`);
+        } catch (error) {
+            console.error(error);
+            return {};
+        }
+    },
 
     addCart: async (product_id: any) => {
         try {
@@ -42,6 +50,15 @@ const productsApi = {
     orders: async () => {
         try {
             return await axios.get('/orders');
+        } catch (error) {
+            console.error(error);
+            return {};
+        }
+    },
+
+    findOrder: async (orderId: any) => {
+        try {
+            return await axios.get(`/orders/${orderId}`);
         } catch (error) {
             console.error(error);
             return {};

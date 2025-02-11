@@ -1,5 +1,5 @@
 import AuthLayout from "../../../layouts/backend/AuthLayout.tsx";
-import FromComponent from "./FromComponent.tsx";
+import FormComponent from "../../../components/FormComponent.tsx";
 import InputComponent from "../../../components/formLayout/InputComponent.tsx";
 import FileInput from "../../../components/formLayout/FileInput.tsx";
 import {useFormik} from "formik";
@@ -67,7 +67,8 @@ const CreateProductPage = () => {
     }
 
     return <AuthLayout>
-        <FromComponent
+        <FormComponent
+            isEmptyForm={false}
             loading={loading}
             disable={loading}
             onSubmit={form.submitForm}
@@ -122,7 +123,7 @@ const CreateProductPage = () => {
                 />
             </div>
 
-        </FromComponent>
+        </FormComponent>
     </AuthLayout>
 }
 

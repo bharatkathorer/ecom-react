@@ -1,4 +1,4 @@
-import {CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon} from '@heroicons/react/20/solid'
+import {QuestionMarkCircleIcon, XMarkIcon} from '@heroicons/react/20/solid'
 import AuthLayout from "../../../layouts/frontend/AuthLayout.tsx";
 import productsApi from "../../../api/frontend/productsApi.ts";
 import {useEffect, useState} from "react";
@@ -10,18 +10,27 @@ import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx"
 import {CheckCircleIcon} from "@heroicons/react/16/solid";
 import {Radio, RadioGroup} from "@headlessui/react";
 import {useNavigate} from "react-router-dom";
+import {useFormik} from "formik";
+import FormComponent from "../../../components/FormComponent.tsx";
 
 
 const CartPage = () => {
 
     // const {loading} = useSelector((state: any) => state);
     const navigate = useNavigate();
-    const [pincode, setPincode] = useState<string>('');
-    const [addressValue, setAddressValue] = useState<string>('');
     const [selectedDeliveryAddress, setSelectedDeliveryAddress] = useState<any>(null)
     const [cartList, setCartList] = useState<any>([]);
     const [address, setAddress] = useState<any>([]);
     const [openAddressModel, setOpenAddressModel] = useState<boolean>(false);
+
+    const addressForm = useFormik({
+        initialValues: {
+            pincode: '',
+            address: '',
+            id: null
+        },
+        onSubmit: () => handleStoreAddress()
+    })
 
     useEffect(() => {
         handleLoadCarts();
@@ -51,25 +60,25 @@ const CartPage = () => {
         }
     }
 
-    const handleAddAdress = async (e: any) => {
-        e.preventDefault();
-        const response: any = await addressApi.store({
-            pincode,
-            address: addressValue
-        });
+    const handleStoreAddress = async () => {
+
+        const response: any = await (addressForm.values.id ? addressApi.update(addressForm.values.id, addressForm.values) : addressApi.store(addressForm.values));
         if (response?.data?.success) {
-            const {auth, success, message, ...rest} = response.data;
-            setAddress([
-                ...address,
-                rest
-            ]);
+            if (addressForm.values.id) {
+                await handleLoadAddress();
+            } else {
+                const {auth, success, message, ...rest} = response.data;
+                setAddress([
+                    ...address,
+                    rest
+                ]);
+            }
+            addressForm.resetForm();
             setOpenAddressModel(false);
         }
 
     }
-    const handleCheckout = async (e: any) => {
-        // address_id,cart_ids
-        e.preventDefault();
+    const handleCheckout = async () => {
         const response: any = await productsApi.checkout({
             address_id: selectedDeliveryAddress?.id,
             cart_ids: cartList.map((item: any) => item.cart_id)
@@ -79,6 +88,10 @@ const CartPage = () => {
             navigate('/orders');
         }
     }
+    const handleEditAddress = (add: any) => {
+        addressForm.setValues(add);
+        setOpenAddressModel(true);
+    }
 
     const totalPrice: number = cartList.reduce((old: number, _new: any) => old + _new.net_price, 0);
 
@@ -87,38 +100,42 @@ const CartPage = () => {
             pageTitle="Shopping Cart"
             pageDescription="Check the status of recent orders, manage returns, and discover similar products."
         >
-
             <div>
                 <ModelComponent open={openAddressModel} close={() => setOpenAddressModel(false)}>
-                    <form className="space-y-6 w-full mt-4" onSubmit={handleAddAdress}>
-                        <InputComponent
-                            onInput={(e: any) => {
-                                setPincode(e.target.value);
-                            }}
-                            label={'Pincode'}
-                            id="pincode"
-                            name="pincode"
-                            type="number"
-                            required
-                            autoComplete="pincode"
-                        />
-                        <InputComponent
-                            onInput={(e: any) => {
-                                setAddressValue(e.target.value);
-                            }}
-                            label={'Address'}
-                            id="address"
-                            name="address"
-                            textarea
-                            required
-                            autoComplete="email"
-                        />
-                        <div className="flex justify-end">
-                            <div>
-                                <ButtonComponent type="submit" name="Submit"/>
+                    <FormComponent className="space-y-6 w-full mt-4"
+                                   onSubmit={() => addressForm.submitForm()}>
+                        <>
+                            <InputComponent
+                                onInput={(e: any) => {
+                                    addressForm.setFieldValue('pincode', e.target.value);
+                                }}
+                                defaultValue={addressForm.values.pincode}
+                                label={'Pincode'}
+                                id="pincode"
+                                name="pincode"
+                                type="number"
+                                required
+                                autoComplete="pincode"
+                            />
+                            <InputComponent
+                                onInput={(e: any) => {
+                                    addressForm.setFieldValue('address', e.target.value);
+                                }}
+                                defaultValue={addressForm.values.address}
+                                label={'Address'}
+                                id="address"
+                                name="address"
+                                textarea
+                                required
+                                autoComplete="email"
+                            />
+                            <div className="flex justify-end">
+                                <div>
+                                    <ButtonComponent type="submit" name={addressForm.values.id ? 'Update' : 'Submit'}/>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </>
+                    </FormComponent>
                 </ModelComponent>
 
                 <div className="mt-16">
@@ -160,10 +177,8 @@ const CartPage = () => {
                                                                     <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
                                                                 ) : null}
                                                             </div>
-                                                            <div className="flex space-x-2 ">
-                                                                <p className="mt-1 text-sm font-medium text-gray-900">₹{product.net_price}</p>
-                                                                <p className="mt-1 text-sm font-medium text-gray-900">₹{product.grass_price}</p>
-                                                                <p className="mt-1 text-sm font-medium text-gray-900">₹{product.discount}</p>
+                                                            <div className="flex-row     space-x-2 ">
+                                                                <p className="mt-1 text-sm font-medium text-gray-900"> ₹{product.discount} Off</p>
                                                             </div>
                                                         </div>
 
@@ -172,7 +187,7 @@ const CartPage = () => {
                                                             <div className="absolute right-0 top-0">
                                                                 <button type="button"
                                                                         onClick={() => handleRemoveCart(product.id)}
-                                                                        className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                                                                        className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500 cursor-pointer">
                                                                     <span className="sr-only">Remove</span>
                                                                     <XMarkIcon aria-hidden="true" className="size-5"/>
                                                                 </button>
@@ -180,16 +195,11 @@ const CartPage = () => {
                                                         </div>
                                                     </div>
 
-                                                    <p className="mt-4 flex space-x-2 text-sm text-gray-700">
-                                                        {product.inStock ? (
-                                                            <CheckIcon aria-hidden="true"
-                                                                       className="size-5 shrink-0 text-green-500"/>
-                                                        ) : (
-                                                            <ClockIcon aria-hidden="true"
-                                                                       className="size-5 shrink-0 text-gray-300"/>
-                                                        )}
-
-                                                        <span>{product.inStock ? 'In stock' : `Ships in ${product.leadTime}`}</span>
+                                                    <p className="mt-4 flex space-x-2 text-sm ">
+                                                        Buy Price ₹{product.net_price} <span
+                                                        className={'line-through ml-2 text-gray-700'}>
+                                                       ₹{product.grass_price}
+                                                    </span>
                                                     </p>
                                                 </div>
                                             </li>
@@ -200,7 +210,7 @@ const CartPage = () => {
                                 {/* Order summary */}
                                 <section
                                     aria-labelledby="summary-heading"
-                                    className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+                                    className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 sticky top-4"
                                 >
                                     <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
                                         Order summary
@@ -257,7 +267,7 @@ const CartPage = () => {
                                                             aria-description={`${deliveryMethod.pincode} for ${deliveryMethod.id}`}
                                                             className="group relative flex cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500"
                                                         >
-                                                          <span className="flex flex-1">
+                                                          <span className="flex flex-1 ">
                                                             <span className="flex flex-col">
                                                               <span
                                                                   className="block text-sm font-medium text-gray-900">{deliveryMethod.pincode}</span>
@@ -265,7 +275,14 @@ const CartPage = () => {
                                                                   className="mt-1 flex items-center text-sm text-gray-500">
                                                                 {deliveryMethod.address}
                                                               </span>
+
                                                             </span>
+                                                              <div
+                                                                  onClick={() => handleEditAddress(deliveryMethod)}
+                                                                  className={'flex justify-end text-blue-600 hover:text-blue-400 font-semibold absolute right-4 bottom-2'}>
+                                                                Edit
+                                                            </div>
+
                                                           </span>
                                                             <CheckCircleIcon
                                                                 aria-hidden="true"
@@ -280,13 +297,14 @@ const CartPage = () => {
                                                 </RadioGroup>
                                             </fieldset>
                                         </div>
-                                        <button className="cursor-pointer text-blue-600 font-semibold hover:underline hover:text-blue-500"
-                                                onClick={() => setOpenAddressModel(true)}>
+                                        <button
+                                            className="cursor-pointer text-blue-600 font-semibold hover:underline hover:text-blue-500"
+                                            onClick={() => setOpenAddressModel(true)}>
                                             {address.length ? 'Add new address' : 'Please add delivery address'}
                                         </button>
                                     </dl>
 
-                                    <form className="mt-6" onSubmit={handleCheckout}>
+                                    <FormComponent className="mt-6" onSubmit={handleCheckout}>
                                         <button
                                             type="submit"
                                             className="w-full rounded-md border border-transparent bg-indigo-600
@@ -296,7 +314,7 @@ const CartPage = () => {
                                         >
                                             Checkout
                                         </button>
-                                    </form>
+                                    </FormComponent>
                                 </section>
                             </div>
                         </> : <>

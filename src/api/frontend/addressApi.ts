@@ -18,6 +18,14 @@ const addressApi = {
             return {};
         }
     },
+    update: async (addressId:any,data: any) => {
+        try {
+            return await axios.put(`/addresses/${addressId}`, data);
+        } catch (error) {
+            console.error(error);
+            return {};
+        }
+    },
 
 };
 export default addressApi;

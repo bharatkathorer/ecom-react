@@ -1,46 +1,22 @@
-import {useNavigate, useParams} from "react-router-dom";
-import AuthLayout from "../../../layouts/backend/AuthLayout.tsx";
+import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import orderApi from "../../../api/backend/orderApi.ts";
 import TimeLineComponent from "../../../components/formLayout/timeline/TimeLineComponent.tsx";
 import TimeLineItem from "../../../components/formLayout/timeline/TimeLineItem.tsx";
-import {formatDate, makeUrl, orderStatus, orderStatusList} from "../../../utils/const.tsx";
-import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx";
-import InputComponent from "../../../components/formLayout/InputComponent.tsx";
-import {useFormik} from "formik";
+import {formatDate, makeUrl, orderStatus} from "../../../utils/const.tsx";
+import productsApi from "../../../api/frontend/productsApi.ts";
+import AuthLayout from "../../../layouts/frontend/AuthLayout.tsx";
 
-const ViewOrderPage = () => {
+const ViewOrder = () => {
     const {orderId} = useParams();
-    const navigate = useNavigate();
     const [order, setOrder] = useState<any>({})
     useEffect(() => {
         findOrder();
     }, []);
     const findOrder = async () => {
-        const response: any = await orderApi.find(orderId);
+        const response: any = await productsApi.findOrder(orderId);
         if (response.data.success) {
             response.data.order_transactions = await JSON.parse(response.data.order_transactions)
             setOrder(response.data);
-            await form.setFieldValue('status', response.data.status)
-        } else {
-            navigate('/admin/orders');
-        }
-    }
-    const form = useFormik({
-        initialValues: {
-            note: '',
-            status: 0,
-        },
-        onSubmit: () => handleSubmit()
-    })
-    const handleSubmit = async () => {
-        const response: any = await orderApi.update({
-            ...form.values,
-            order_id: orderId
-        });
-        if (response.data.success) {
-            await form.setFieldValue('note', '')
-            await findOrder();
         }
     }
 
@@ -57,41 +33,6 @@ const ViewOrderPage = () => {
                     </dl>
                 </div>
 
-                <div className='mt-10 border-t pt-10 grid gap-4  border-gray-200'>
-                    <div>
-                        <label
-                            className="block text-sm/6 font-medium text-gray-900 capitalize">
-                            Update order status
-                        </label>
-                        <select
-                            onInput={(val: any) => form.setFieldValue('status', val.target.value)}
-                            value={form.values.status}
-                            id="location"
-                            name="location"
-                            defaultValue="Canada"
-                            className="col-start-1 mt-1 row-start-1 w-full
-                             appearance-none rounded-md bg-white
-                              py-1.5 pl-3 pr-8 text-base text-gray-900
-                               outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        >
-                            {Object.entries(orderStatusList).map(([key, value]) => (
-                                <option value={key} key={key}>
-                                    {/*@ts-ignore*/}
-                                    {value}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <InputComponent label={"Note"}
-                                    onInput={(val: any) => form.setFieldValue('note', val.target.value)}
-                                    defaultValue={form.values.note}
-                                    textarea
-                                    name={'note'}
-                    />
-                    <div>
-                        <ButtonComponent onClick={() => form.submitForm()} name={'Update status'}/>
-                    </div>
-                </div>
                 <div className="mt-10 border-t border-gray-200">
 
                     <div key={order.id} className="flex space-x-6 border-b border-gray-200 py-10">
@@ -121,6 +62,7 @@ const ViewOrderPage = () => {
                             </div>
                         </div>
                     </div>
+
 
                     <div className="sm:ml-40 sm:pl-6">
                         <h3 className="sr-only">Your information</h3>
@@ -201,4 +143,4 @@ const ViewOrderPage = () => {
     </AuthLayout>
 }
 
-export default ViewOrderPage;
+export default ViewOrder;

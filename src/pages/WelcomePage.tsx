@@ -8,7 +8,7 @@ const WelcomePage = () => {
 
     const [products, setProducts] = useState<any>([]);
 
-    return <AuthLayout pageTitle="Customers also bought">
+    return <AuthLayout pageTitle="Products">
         <>
             <InfinityScrollComponent apiMethod={(page) => productsApi.index(page)}
                                      setItems={(items) => setProducts(items)}>
