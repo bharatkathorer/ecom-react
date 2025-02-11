@@ -1,4 +1,4 @@
-import './axios';
+import '../axios.ts';
 import axios from 'axios';
 
 const addressApi = {

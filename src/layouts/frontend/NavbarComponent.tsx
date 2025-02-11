@@ -5,8 +5,8 @@ import {Dialog, DialogBackdrop, DialogPanel, PopoverGroup,} from '@headlessui/re
 import {Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import authApi from "../api/AuthApi.ts";
-import {handleLogoutUser} from "../utils/const.tsx";
+import authApi from "../../api/frontend/AuthApi.ts";
+import {handleLogoutUser} from "../../utils/const.tsx";
 
 const navigation = {
     categories: [],
@@ -133,13 +133,13 @@ const NavbarComponent = () => {
                             <PopoverGroup className="hidden lg:ml-8 lg:block lg:self-stretch">
                                 <div className="flex h-full space-x-8">
                                     {navigation.pages.map((page: any) => (
-                                        <a
+                                        <Link
                                             key={page.name}
-                                            href={page.href}
+                                            to={page.href}
                                             className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                                         >
                                             {page.name}
-                                        </a>
+                                        </Link>
                                     ))}
                                 </div>
                             </PopoverGroup>

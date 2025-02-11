@@ -5,7 +5,7 @@ type props = {
     children?: ReactElement,
     title?: String,
 }
-const HeaderComponent = ({children, title = "Sign in to your account"}: props) => {
+const GuestHeaderComponent = ({children, title = "Sign in to your account"}: props) => {
     return <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
             <Link to={'/'}>
@@ -23,4 +23,4 @@ const HeaderComponent = ({children, title = "Sign in to your account"}: props) =
         {children}
     </div>
 }
-export default HeaderComponent;
+export default GuestHeaderComponent;

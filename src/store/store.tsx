@@ -5,11 +5,13 @@ import storage from 'redux-persist/lib/storage'
 // import {mutationAPI} from './api/mutations'
 // import {queryAPI} from './api/queries'
 import authSlice from './slice/authSlice.ts'
+import adminAuthSlice from "./slice/adminAuthSlice.ts";
 
 const appReducer = combineReducers({
     // [queryAPI.reducerPath]: queryAPI.reducer,
     // [mutationAPI.reducerPath]: mutationAPI.reducer,
     auth: authSlice,
+    adminAuth: adminAuthSlice,
 })
 
 const persistConfig = {

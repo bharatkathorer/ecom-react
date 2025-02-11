@@ -1,12 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
 import InputComponent from "../../../components/formLayout/InputComponent.tsx";
-import GuestHeaderComponent from "../../../layouts/GuestHeaderComponent.tsx";
 import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx";
-import authApi from "../../../api/frontend/AuthApi.ts";
+import authApi from "../../../api/backend/AuthApi.ts";
 import {useState} from "react";
-import {handleLoginUser} from "../../../utils/const.tsx";
+import {handleLoginAdmin} from "../../../utils/const.tsx";
 import {useDispatch} from "react-redux";
-import GoogleAuthComponent from "./GoogleAuthComponent.tsx";
+import GuestHeaderComponent from "../../../layouts/GuestHeaderComponent.tsx";
+import GoogleAuthComponent from "../../frontend/auth/GoogleAuthComponent.tsx";
 
 const LoginPage = () => {
 
@@ -20,8 +20,8 @@ const LoginPage = () => {
         e.preventDefault();
         const resp: any = await authApi.login({email, password});
         if (resp?.data?.success) {
-            handleLoginUser(resp.data, dispatch);
-            navigate('/');
+            handleLoginAdmin(resp.data, dispatch);
+            navigate('/admin');
         }
     }
 

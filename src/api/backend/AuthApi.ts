@@ -1,10 +1,10 @@
-import './axios';
+import './../axios';
 import axios from 'axios';
 
 const AuthApi = {
     login: async (data: any) => {
         try {
-            return await axios.post('/user/login', data);
+            return await axios.post('backend/login', data);
         } catch (error) {
             console.error(error);
             return {};
@@ -12,7 +12,7 @@ const AuthApi = {
     },
     register: async (data: any) => {
         try {
-            return await axios.post('/user/register', data);
+            return await axios.post('backend/register', data);
         } catch (error) {
             console.error(error);
             return {};
@@ -20,7 +20,7 @@ const AuthApi = {
     },
     logout: async () => {
         try {
-            return await axios.post('/user/logout');
+            return await axios.post('backend/logout');
         } catch (error) {
             console.error(error);
             return {};

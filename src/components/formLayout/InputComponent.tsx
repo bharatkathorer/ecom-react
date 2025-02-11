@@ -13,7 +13,7 @@ const InputComponent = ({label, suffix, value, textarea, ...props}: Props) => {
                 (label || suffix) &&
                 <div className="flex items-center justify-between">
                     <label htmlFor={props?.id}
-                           className="block text-sm/6 font-medium text-gray-900">
+                           className="block text-sm/6 font-medium text-gray-900 capitalize">
                         {label}
                     </label>
                     {suffix}

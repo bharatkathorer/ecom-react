@@ -1,10 +1,10 @@
-import './axios';
+import '../axios.ts';
 import axios from 'axios';
 
 const productsApi = {
-    index: async () => {
+    index: async (page: any = 1) => {
         try {
-            return await axios.get('/products');
+            return await axios.get(`/products?page=${page}&limit=100`);
         } catch (error) {
             console.error(error);
             return {};
@@ -29,9 +29,9 @@ const productsApi = {
         }
     },
 
-    checkout: async (data:any) => {
+    checkout: async (data: any) => {
         try {
-            return await axios.post('/orders/checkout',data);
+            return await axios.post('/orders/checkout', data);
         } catch (error) {
             console.error(error);
             return {};
@@ -47,7 +47,6 @@ const productsApi = {
             return {};
         }
     },
-
 
 
 };

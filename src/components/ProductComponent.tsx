@@ -1,5 +1,5 @@
 import {makeUrl} from "../utils/const.js";
-import productsApi from "../api/productsApi.ts";
+import productsApi from "../api/frontend/productsApi.ts";
 import {useState} from "react";
 
 

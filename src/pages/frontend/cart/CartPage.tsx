@@ -1,9 +1,9 @@
 import {CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon} from '@heroicons/react/20/solid'
-import FrontAuthLayout from "../../../layouts/FrontAuthLayout.tsx";
-import productsApi from "../../../api/productsApi.ts";
+import AuthLayout from "../../../layouts/frontend/AuthLayout.tsx";
+import productsApi from "../../../api/frontend/productsApi.ts";
 import {useEffect, useState} from "react";
 import {makeUrl} from "../../../utils/const.tsx";
-import addressApi from "../../../api/addressApi.ts";
+import addressApi from "../../../api/frontend/addressApi.ts";
 import ModelComponent from "../../../components/ModelComponent.tsx";
 import InputComponent from "../../../components/formLayout/InputComponent.tsx";
 import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx";
@@ -76,17 +76,19 @@ const CartPage = () => {
         })
         // console.log(response);
         if (response?.data?.success) {
-            navigate('/');
+            navigate('/orders');
         }
     }
 
     const totalPrice: number = cartList.reduce((old: number, _new: any) => old + _new.net_price, 0);
 
     return (
-        <FrontAuthLayout>
+        <AuthLayout
+            pageTitle="Shopping Cart"
+            pageDescription="Check the status of recent orders, manage returns, and discover similar products."
+        >
 
-            <div className="bg-white">
-                {/*{JSON.stringify(cartList)}*/}
+            <div>
                 <ModelComponent open={openAddressModel} close={() => setOpenAddressModel(false)}>
                     <form className="space-y-6 w-full mt-4" onSubmit={handleAddAdress}>
                         <InputComponent
@@ -119,8 +121,7 @@ const CartPage = () => {
                     </form>
                 </ModelComponent>
 
-                <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+                <div className="mt-16">
                     {
                         (cartList.length) ? <>
 
@@ -279,7 +280,7 @@ const CartPage = () => {
                                                 </RadioGroup>
                                             </fieldset>
                                         </div>
-                                        <button className="cursor-pointer text-orange-700"
+                                        <button className="cursor-pointer text-blue-600 font-semibold hover:underline hover:text-blue-500"
                                                 onClick={() => setOpenAddressModel(true)}>
                                             {address.length ? 'Add new address' : 'Please add delivery address'}
                                         </button>
@@ -307,7 +308,7 @@ const CartPage = () => {
                     }
                 </div>
             </div>
-        </FrontAuthLayout>
+        </AuthLayout>
     )
 }
 export default CartPage;

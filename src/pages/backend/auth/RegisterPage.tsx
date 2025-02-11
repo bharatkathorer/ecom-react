@@ -1,12 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
-import GuestHeaderComponent from "../../../layouts/GuestHeaderComponent.tsx";
 import InputComponent from "../../../components/formLayout/InputComponent.tsx";
 import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx";
 import authApi from "../../../api/frontend/AuthApi.ts";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {handleLoginUser} from "../../../utils/const.tsx";
-import GoogleAuthComponent from "./GoogleAuthComponent.tsx";
+import GuestHeaderComponent from "../../../layouts/GuestHeaderComponent.tsx";
+import GoogleAuthComponent from "../../frontend/auth/GoogleAuthComponent.tsx";
 
 const RegisterPage = () => {
 
