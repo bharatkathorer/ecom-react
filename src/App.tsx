@@ -11,6 +11,7 @@ function App() {
                 />
                 <Route path="/*" element={<IndexRoutes/>}/>
             </Routes>
+
         </>
     )
 }

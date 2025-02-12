@@ -1,5 +1,7 @@
 import {ReactElement} from "react";
 import NavbarComponent from "./NavbarComponent.tsx";
+import ChatContainer from "../../components/chat/ChatContainer.tsx";
+import {useSelector} from "react-redux";
 
 type Props = {
     children?: ReactElement,
@@ -7,9 +9,14 @@ type Props = {
     pageDescription?: string
 }
 const AuthLayout = ({children, pageTitle, pageDescription}: Props) => {
+
+    const login = useSelector((state: any) => state.auth.login);
     return <>
         <NavbarComponent/>
-
+        {
+            login &&
+            <ChatContainer/>
+        }
         <div className="bg-white">
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
                 {
