@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
 import FormComponent from "../../../components/FormComponent.tsx";
 import InputErrorComponent from "../../../components/InputErrorComponent.tsx";
+import LoadingComponent from "../../../components/LoadingComponent.tsx";
 
 
 const CartPage = () => {
@@ -25,6 +26,8 @@ const CartPage = () => {
     const [openAddressModel, setOpenAddressModel] = useState<boolean>(false);
     const [error, setError] = useState<any>({})
     const [checkouterror, setCheckoutError] = useState<any>({})
+    const [loading, setLoading] = useState<boolean>(false)
+    const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false)
     const addressForm = useFormik({
         initialValues: {
             pincode: '',
@@ -43,10 +46,12 @@ const CartPage = () => {
         setSelectedDeliveryAddress(address.find((i: any) => i.is_default))
     }, [address]);
     const handleLoadCarts = async () => {
+        setLoading(true);
         const response: any = await productsApi.cartList();
         if (response?.data?.success) {
             setCartList(response.data.carts);
         }
+        setLoading(false);
     }
     const handleLoadAddress = async () => {
         const response: any = await addressApi.index();
@@ -82,15 +87,19 @@ const CartPage = () => {
 
     }
     const handleCheckout = async () => {
-        const response: any = await productsApi.checkout({
-            address_id: selectedDeliveryAddress?.id,
-            cart_ids: cartList.map((item: any) => item.cart_id)
-        })
-        setCheckoutError(response);
-        // console.log(response);
-        if (response?.data?.success) {
-            navigate('/orders');
+        setLoadingCheckout(true);
+        if (!loadingCheckout) {
+            const response: any = await productsApi.checkout({
+                address_id: selectedDeliveryAddress?.id,
+                cart_ids: cartList.map((item: any) => item.cart_id)
+            })
+            setCheckoutError(response);
+            // console.log(response);
+            if (response?.data?.success) {
+                navigate('/orders');
+            }
         }
+        setLoadingCheckout(false);
     }
     const handleEditAddress = (add: any) => {
         addressForm.setValues(add);
@@ -98,6 +107,12 @@ const CartPage = () => {
     }
 
     const totalPrice: number = cartList.reduce((old: number, _new: any) => old + _new.net_price, 0);
+
+    if (loading) {
+        return <AuthLayout>
+            <LoadingComponent/>
+        </AuthLayout>;
+    }
 
     return (
         <AuthLayout
@@ -310,15 +325,16 @@ const CartPage = () => {
                                     </dl>
 
                                     <FormComponent className="mt-6" onSubmit={handleCheckout}>
-                                        <button
+                                        <ButtonComponent
+                                            disabled={loadingCheckout}
+                                            loading={loadingCheckout}
                                             type="submit"
                                             className="w-full rounded-md border border-transparent bg-indigo-600
                                             px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700
                                              focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
                                              focus:ring-offset-gray-50"
-                                        >
-                                            Checkout
-                                        </button>
+                                            name={'Checkout'}
+                                        />
                                     </FormComponent>
                                 </section>
                             </div>

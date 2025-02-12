@@ -15,6 +15,7 @@ const LoginPage = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<any>({});
 
     const loginForm = useFormik({
@@ -25,13 +26,14 @@ const LoginPage = () => {
         onSubmit: () => handleLogin()
     })
     const handleLogin = async () => {
+        setLoading(true);
         const resp: any = await authApi.login(loginForm.values);
         setError(resp);
         if (resp?.data?.success) {
             handleLoginUser(resp.data, dispatch);
             navigate('/');
         }
-
+        setLoading(false)
     }
 
 
@@ -70,7 +72,7 @@ const LoginPage = () => {
                         <InputErrorComponent className={'mt-1'} response={error} errorType={'MAIN_ERROR'}/>
                     </div>
 
-                    <ButtonComponent name={'Login'} type="submit"/>
+                    <ButtonComponent loading={loading} disabled={loading} name={'Login'} type="submit"/>
                 </FormComponent>
 
                 <p className="mt-10 text-center text-sm/6 text-gray-500">

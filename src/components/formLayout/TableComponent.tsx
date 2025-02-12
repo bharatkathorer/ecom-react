@@ -1,6 +1,7 @@
 import {ReactNode} from "react";
 import {NavLink} from "react-router-dom";
 import PaginationComponent from "../PaginateComponent.tsx";
+import LoadingComponent from "../LoadingComponent.tsx";
 
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
@@ -13,6 +14,7 @@ type actionData = {
 type  Props = {
     title?: string,
     dataKey?: string,
+    loading?: boolean,
     description?: string,
     fields: Object[],
     options: any,
@@ -22,13 +24,14 @@ type  Props = {
 }
 const TableComponent = ({
                             title,
-                            dataKey='data',
+                            dataKey = 'data',
                             description,
                             fields = [],
                             options = [],
                             renderSlot,
                             actionSlot,
-                            actionData
+                            actionData,
+                            loading
                         }: Props) => {
     return (
         <div className="px-4 sm:px-6 lg:px-8">
@@ -79,33 +82,43 @@ const TableComponent = ({
                                 }
                             </tr>
                             </thead>
-                            <tbody>
-                            {(options?.[dataKey] ?? options).map((row: any, rowIdx: number) => (
-                                <tr key={rowIdx}>
-                                    {
-                                        fields.map((field: any, fieldIndex: number) => (
+                            {
+                                !loading &&
+                                <tbody>
 
-                                            <td
-                                                key={`${rowIdx}-${fieldIndex}`}
-                                                className={classNames(
-                                                    rowIdx !== (options?.[dataKey] ?? options).length - 1 ? 'border-b border-gray-200' : '',
-                                                    'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8',
-                                                )}
-                                            >
-                                                {
-                                                    renderSlot ? renderSlot(field.key, {
-                                                        ...row,
-                                                        indexId: rowIdx,
-                                                        fieldIndex,
-                                                    }) : row[field.key]
-                                                }
-                                            </td>
-                                        ))
-                                    }
-                                </tr>
-                            ))}
-                            </tbody>
+                                {(options?.[dataKey] ?? options).map((row: any, rowIdx: number) => (
+                                    <tr key={rowIdx}>
+                                        {
+                                            fields.map((field: any, fieldIndex: number) => (
+
+                                                <td
+                                                    key={`${rowIdx}-${fieldIndex}`}
+                                                    className={classNames(
+                                                        rowIdx !== (options?.[dataKey] ?? options).length - 1 ? 'border-b border-gray-200' : '',
+                                                        'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8',
+                                                    )}
+                                                >
+                                                    {
+                                                        renderSlot ? renderSlot(field.key, {
+                                                            ...row,
+                                                            indexId: rowIdx,
+                                                            fieldIndex,
+                                                        }) : row[field.key]
+                                                    }
+                                                </td>
+                                            ))
+                                        }
+                                    </tr>
+                                ))}
+                                </tbody>
+                            }
                         </table>
+                        {
+                            loading &&
+                            <div className={'py-16'}>
+                                <LoadingComponent/>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

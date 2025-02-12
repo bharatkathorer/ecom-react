@@ -17,18 +17,19 @@ const ButtonComponent = ({children, loading, disabled, onClick, name, ...rest}: 
                 return;
             }
             onClick && onClick();
-            setTimeout(() => setLoading(false), 100);
         }
+        setTimeout(() => setLoading(false), 100);
 
     }
     return <>
         <button
+
+            onClick={handleClick}
+            {...rest}
             className={`flex  justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold shadow-sm 
                 items-center space-x-2 focus-visible:outline focus-visible:outline-2 
                 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 
-                ${(disabled || loading || selfLoading) ? "bg-indigo-300 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-500 text-white"}`}
-            onClick={handleClick}
-            {...rest}
+                ${(disabled || loading || selfLoading) ? "bg-indigo-300 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-500 text-white"} ${rest?.className}`}
         >
             {loading && <SpinnerComponent className='size-5 animate-spin'/>} {children && children} {name && name}
         </button>

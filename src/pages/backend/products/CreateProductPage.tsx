@@ -7,11 +7,13 @@ import productsApi from "../../../api/backend/productsApi.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {makeUrl} from "../../../utils/const.tsx";
+import LoadingComponent from "../../../components/LoadingComponent.tsx";
 
 const CreateProductPage = () => {
     const {productId} = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false)
+    const [editLoading, setEditLoading] = useState<boolean>(false)
     const [error, setError] = useState<any>({});
 
 
@@ -19,6 +21,7 @@ const CreateProductPage = () => {
         loadProduct();
     }, []);
     const loadProduct = async () => {
+        setEditLoading(true)
         if (productId) {
             const {data}: any = await productsApi.find(productId);
             if (data.success) {
@@ -33,6 +36,8 @@ const CreateProductPage = () => {
                 await form.setValues(_data);
             }
         }
+        setEditLoading(false)
+
     }
     const form = useFormik({
         initialValues: {
@@ -69,6 +74,11 @@ const CreateProductPage = () => {
         form.setFieldValue('product_image', file);
     }
 
+    if(editLoading){
+        return <AuthLayout>
+            <LoadingComponent/>
+        </AuthLayout>
+    }
     return <AuthLayout>
         <FormComponent
             isEmptyForm={false}

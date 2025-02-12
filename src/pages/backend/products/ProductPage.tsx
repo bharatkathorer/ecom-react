@@ -20,6 +20,7 @@ const ProductPage = () => {
         {key: 'actions', label: "actions"},
     ];
     const [products, setProducts] = useState<any>([]);
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         loadProducts().then();
@@ -35,10 +36,12 @@ const ProductPage = () => {
     }
 
     const loadProducts = async () => {
+        setLoading(true);
         const response: any = await productsApi.index(page);
         if (response?.data?.success) {
             setProducts(response.data);
         }
+        setLoading(false);
     }
     const handleRowValue = (key: any, value: any) => {
         switch (key) {
@@ -73,6 +76,7 @@ const ProductPage = () => {
 
     return <AuthLayout>
         <TableComponent
+            loading={loading}
             title="Products"
             fields={fields}
             options={products}

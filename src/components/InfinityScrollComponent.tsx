@@ -1,5 +1,5 @@
 import {ReactElement, useEffect, useRef, useState} from "react";
-import SpinnerComponent from "./SpinnerComponent.tsx";
+import LoadingComponent from "./LoadingComponent.tsx";
 
 type Props = {
     apiMethod: (page: number) => Promise<any>;
@@ -26,6 +26,7 @@ const InfinityScrollComponent = ({apiMethod, children, setItems}: Props) => {
             setData((prev: any) => [...prev, ...newItems]); // Merge new data
             setHasMore(newItems.length > 0); // Check if more data exists
         } catch (error) {
+            setHasMore(false);
             console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
@@ -66,9 +67,7 @@ const InfinityScrollComponent = ({apiMethod, children, setItems}: Props) => {
         <>
             {children && children}
             <div ref={lastElementRef}></div>
-            {loading && <div className="flex items-center justify-center animate-spin text-gray-400 my-4">
-                <SpinnerComponent className="h-24"/>
-            </div>}
+            {loading && <LoadingComponent/>}
         </>
     );
 };

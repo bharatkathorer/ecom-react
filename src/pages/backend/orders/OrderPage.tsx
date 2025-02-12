@@ -7,6 +7,7 @@ import orderApi from "../../../api/backend/orderApi.ts";
 import LinkComponent from "../../../components/LinkComponent.tsx";
 
 const OrderPage = () => {
+    const [loading, setLoading] = useState<boolean>(false)
     const [searchParams] = useSearchParams();
     const page = Number(searchParams.get("page")) || 1; // Default to page 1
     const fields = [
@@ -29,10 +30,13 @@ const OrderPage = () => {
 
 
     const loadProducts = async () => {
+        setLoading(true)
         const response: any = await orderApi.index(page);
         if (response?.data?.success) {
             setOrders(response.data);
         }
+        setLoading(false)
+
     }
     const handleRowValue = (key: any, value: any) => {
         switch (key) {
@@ -67,6 +71,7 @@ const OrderPage = () => {
 
     return <AuthLayout>
         <TableComponent
+            loading={loading}
             title="Orders"
             fields={fields}
             options={orders}

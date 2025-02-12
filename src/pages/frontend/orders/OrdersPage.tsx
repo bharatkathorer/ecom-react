@@ -6,19 +6,30 @@ import {EllipsisVerticalIcon} from "@heroicons/react/24/outline";
 import {CheckCircleIcon} from "@heroicons/react/16/solid";
 import {formatDate, makeUrl, orderStatus} from "../../../utils/const.tsx";
 import {Link} from "react-router-dom";
+import LoadingComponent from "../../../components/LoadingComponent.tsx";
 
 
 const OrdersPage = () => {
     const [orders, setOrders] = useState<any>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         loadOrders();
     }, []);
     const loadOrders = async () => {
+        setLoading(true);
         const response: any = await productsApi.orders();
         if (response?.data?.success) {
             setOrders(response.data.orders);
         }
+        setLoading(false);
+
+    }
+
+    if (loading) {
+        return <AuthLayout>
+            <LoadingComponent/>
+        </AuthLayout>;
     }
 
     return (

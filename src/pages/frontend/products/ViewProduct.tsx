@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import ProductsApi from "../../../api/frontend/productsApi.ts";
 import {makeUrl} from "../../../utils/const.tsx";
 import CartButtonComponent from "../../../components/CartButtonComponent.tsx";
+import LoadingComponent from "../../../components/LoadingComponent.tsx";
 
 
 const reviews = {average: 4, totalCount: 1624}
@@ -21,13 +22,19 @@ const ViewProduct = () => {
         loadProduct();
     }, []);
     const loadProduct = async () => {
+        setLoading(true);
         const response: any = await ProductsApi.find(productId);
         if (response.data.success) {
             setProduct(response.data);
         }
+        setLoading(false);
     }
-    if (!product?.id) {
-        return <></>;
+    const [loading, setLoading] = useState<boolean>(false)
+
+    if (loading) {
+        return <AuthLayout>
+            <LoadingComponent/>
+        </AuthLayout>;
     }
     return <AuthLayout>
 

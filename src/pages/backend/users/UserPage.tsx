@@ -9,16 +9,19 @@ const UserPage = () => {
 
     const [searchParams] = useSearchParams();
     const page = Number(searchParams.get("page")) || 1; // Default to page 1
+    const [loading, setLoading] = useState<boolean>(false)
     const [users, setUsers] = useState<any>([])
 
     useEffect(() => {
         loadUsers().then();
     }, [page]);
     const loadUsers = async () => {
+        setLoading(true);
         const response: any = await userApi.index(page);
         if (response.data.success) {
             setUsers(response.data);
         }
+        setLoading(false);
     }
     const fields = [
         {key: 'name', label: "Name"},
@@ -37,6 +40,7 @@ const UserPage = () => {
     }
     return <AuthLayout>
         <TableComponent
+            loading={loading}
             title="Orders"
             fields={fields}
             options={users}

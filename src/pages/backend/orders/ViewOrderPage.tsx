@@ -8,12 +8,17 @@ import {formatDate, makeUrl, orderStatus, orderStatusList} from "../../../utils/
 import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx";
 import InputComponent from "../../../components/formLayout/InputComponent.tsx";
 import {useFormik} from "formik";
+import LoadingComponent from "../../../components/LoadingComponent.tsx";
+import FormComponent from "../../../components/FormComponent.tsx";
 
 const ViewOrderPage = () => {
     const {orderId} = useParams();
     const navigate = useNavigate();
     const [order, setOrder] = useState<any>({})
+    const [editLoading, setEditLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     useEffect(() => {
+        setEditLoading(true);
         findOrder();
     }, []);
     const findOrder = async () => {
@@ -23,8 +28,10 @@ const ViewOrderPage = () => {
             setOrder(response.data);
             await form.setFieldValue('status', response.data.status)
         } else {
+            setEditLoading(false);
             navigate('/admin/orders');
         }
+        setEditLoading(false);
     }
     const form = useFormik({
         initialValues: {
@@ -34,6 +41,7 @@ const ViewOrderPage = () => {
         onSubmit: () => handleSubmit()
     })
     const handleSubmit = async () => {
+        setLoading(true);
         const response: any = await orderApi.update({
             ...form.values,
             order_id: orderId
@@ -42,8 +50,14 @@ const ViewOrderPage = () => {
             await form.setFieldValue('note', '')
             await findOrder();
         }
+        setLoading(false)
     }
 
+    if (editLoading) {
+        return <AuthLayout>
+            <LoadingComponent/>
+        </AuthLayout>
+    }
     // @ts-ignore
     return <AuthLayout>
         <div className="grid md:grid-cols-4 gap-6 gap-y-8">
@@ -57,7 +71,7 @@ const ViewOrderPage = () => {
                     </dl>
                 </div>
 
-                <div className='mt-10 border-t pt-10 grid gap-4  border-gray-200'>
+                <FormComponent  onSubmit={() => form.submitForm()} className='mt-10 border-t pt-10 grid gap-4  border-gray-200'>
                     <div>
                         <label
                             className="block text-sm/6 font-medium text-gray-900 capitalize">
@@ -89,9 +103,9 @@ const ViewOrderPage = () => {
                                     name={'note'}
                     />
                     <div>
-                        <ButtonComponent onClick={() => form.submitForm()} name={'Update status'}/>
+                        <ButtonComponent loading={loading} disabled={loading} type={'submit'} name={'Update status'}/>
                     </div>
-                </div>
+                </FormComponent>
                 <div className="mt-10 border-t border-gray-200">
 
                     <div key={order.id} className="flex space-x-6 border-b border-gray-200 py-10">

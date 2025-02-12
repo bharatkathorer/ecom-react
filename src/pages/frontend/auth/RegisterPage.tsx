@@ -4,7 +4,7 @@ import InputComponent from "../../../components/formLayout/InputComponent.tsx";
 import ButtonComponent from "../../../components/formLayout/ButtonComponent.tsx";
 import authApi from "../../../api/frontend/AuthApi.ts";
 import {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {handleLoginUser} from "../../../utils/const.tsx";
 import GoogleAuthComponent from "./GoogleAuthComponent.tsx";
 import {useFormik} from "formik";
@@ -12,11 +12,11 @@ import FormComponent from "../../../components/FormComponent.tsx";
 
 const RegisterPage = () => {
 
-    const {loading} = useSelector((state: any) => state.auth);
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const [error, setError] = useState<any>({});
+    const [loading, setLoading] = useState<boolean>(false)
 
     const registerForm = useFormik({
         initialValues: {
@@ -27,6 +27,7 @@ const RegisterPage = () => {
         onSubmit: () => handleRegister()
     })
     const handleRegister = async () => {
+        setLoading(true);
         if (!loading) {
             const response: any = await authApi.register(registerForm.values);
             setError(response);
@@ -35,6 +36,7 @@ const RegisterPage = () => {
                 navigate('/');
             }
         }
+        setLoading(false);
     }
     return (
         <>
@@ -72,7 +74,7 @@ const RegisterPage = () => {
                             defaultValue={registerForm.values.password}
                             onInput={(e: any) => registerForm.setFieldValue('password', e.target.value)}
                         />
-                        <ButtonComponent name={'Submit'} type="submit"/>
+                        <ButtonComponent loading={loading} disabled={loading} name={'Submit'} type="submit"/>
                     </FormComponent>
 
                     <p className="mt-10 text-center text-sm/6 text-gray-500">

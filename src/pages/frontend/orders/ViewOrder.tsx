@@ -5,21 +5,30 @@ import TimeLineItem from "../../../components/formLayout/timeline/TimeLineItem.t
 import {formatDate, makeUrl, orderStatus} from "../../../utils/const.tsx";
 import productsApi from "../../../api/frontend/productsApi.ts";
 import AuthLayout from "../../../layouts/frontend/AuthLayout.tsx";
+import LoadingComponent from "../../../components/LoadingComponent.tsx";
 
 const ViewOrder = () => {
     const {orderId} = useParams();
     const [order, setOrder] = useState<any>({})
+    const [loading, setLoading] = useState<boolean>(false)
     useEffect(() => {
         findOrder();
     }, []);
     const findOrder = async () => {
+        setLoading(true);
         const response: any = await productsApi.findOrder(orderId);
         if (response.data.success) {
             response.data.order_transactions = await JSON.parse(response.data.order_transactions)
             setOrder(response.data);
         }
+        setLoading(false);
     }
 
+    if (loading) {
+        return <AuthLayout>
+            <LoadingComponent/>
+        </AuthLayout>;
+    }
     // @ts-ignore
     return <AuthLayout>
         <div className="grid md:grid-cols-4 gap-6 gap-y-8">
