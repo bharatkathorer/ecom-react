@@ -12,6 +12,7 @@ import {Radio, RadioGroup} from "@headlessui/react";
 import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
 import FormComponent from "../../../components/FormComponent.tsx";
+import InputErrorComponent from "../../../components/InputErrorComponent.tsx";
 
 
 const CartPage = () => {
@@ -22,7 +23,8 @@ const CartPage = () => {
     const [cartList, setCartList] = useState<any>([]);
     const [address, setAddress] = useState<any>([]);
     const [openAddressModel, setOpenAddressModel] = useState<boolean>(false);
-
+    const [error, setError] = useState<any>({})
+    const [checkouterror, setCheckoutError] = useState<any>({})
     const addressForm = useFormik({
         initialValues: {
             pincode: '',
@@ -63,6 +65,7 @@ const CartPage = () => {
     const handleStoreAddress = async () => {
 
         const response: any = await (addressForm.values.id ? addressApi.update(addressForm.values.id, addressForm.values) : addressApi.store(addressForm.values));
+        setError(response);
         if (response?.data?.success) {
             if (addressForm.values.id) {
                 await handleLoadAddress();
@@ -83,6 +86,7 @@ const CartPage = () => {
             address_id: selectedDeliveryAddress?.id,
             cart_ids: cartList.map((item: any) => item.cart_id)
         })
+        setCheckoutError(response);
         // console.log(response);
         if (response?.data?.success) {
             navigate('/orders');
@@ -114,7 +118,7 @@ const CartPage = () => {
                                 id="pincode"
                                 name="pincode"
                                 type="number"
-                                required
+                                errors={error}
                                 autoComplete="pincode"
                             />
                             <InputComponent
@@ -126,7 +130,7 @@ const CartPage = () => {
                                 id="address"
                                 name="address"
                                 textarea
-                                required
+                                errors={error}
                                 autoComplete="email"
                             />
                             <div className="flex justify-end">
@@ -297,6 +301,7 @@ const CartPage = () => {
                                                 </RadioGroup>
                                             </fieldset>
                                         </div>
+                                        <InputErrorComponent response={checkouterror} name={"address_id"}/>
                                         <button
                                             className="cursor-pointer text-blue-600 font-semibold hover:underline hover:text-blue-500"
                                             onClick={() => setOpenAddressModel(true)}>

@@ -29,16 +29,16 @@ export const handleLogoutUser = (dispatch: any) => {
 }
 
 export const handleLoginAdmin = (data: any, dispatch: any) => {
-    localStorage.setItem('user', data);
-    localStorage.setItem('token', data.token);
+    localStorage.setItem('admin_user', data);
+    localStorage.setItem('admin_token', data.token);
     dispatch(setAdminLogin(true));
     dispatch(setAdmin(data));
     dispatch(setAdminToken(data.token));
 }
 
 export const handleLogoutAdmin = (dispatch: any) => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    localStorage.removeItem('admin_user');
+    localStorage.removeItem('admin_token');
     dispatch(setAdminLogin(false));
     dispatch(setAdmin({}));
     dispatch(setAdminToken(null));

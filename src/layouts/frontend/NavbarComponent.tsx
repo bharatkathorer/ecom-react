@@ -2,7 +2,7 @@
 
 import {useState} from 'react'
 import {Dialog, DialogBackdrop, DialogPanel, PopoverGroup,} from '@headlessui/react';
-import {Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {Bars3Icon, ShoppingBagIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import authApi from "../../api/frontend/AuthApi.ts";
@@ -167,12 +167,12 @@ const NavbarComponent = () => {
                                 </div>
 
                                 {/* Search */}
-                                <div className="flex lg:ml-6">
-                                    <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-                                        <span className="sr-only">Search</span>
-                                        <MagnifyingGlassIcon aria-hidden="true" className="size-6"/>
-                                    </a>
-                                </div>
+                                {/*<div className="flex lg:ml-6">*/}
+                                {/*    <a href="#" className="p-2 text-gray-400 hover:text-gray-500">*/}
+                                {/*        <span className="sr-only">Search</span>*/}
+                                {/*        <MagnifyingGlassIcon aria-hidden="true" className="size-6"/>*/}
+                                {/*    </a>*/}
+                                {/*</div>*/}
 
                                 {
                                     login && <>

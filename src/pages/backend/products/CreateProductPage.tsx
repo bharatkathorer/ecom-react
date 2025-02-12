@@ -12,6 +12,7 @@ const CreateProductPage = () => {
     const {productId} = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<any>({});
 
 
     useEffect(() => {
@@ -48,6 +49,7 @@ const CreateProductPage = () => {
     const handleSubmit = async () => {
         setLoading(true);
         const response: any = await productsApi.store(form.values);
+        setError(response);
         if (response?.data?.success) {
             navigate(-1);
         }
@@ -55,7 +57,8 @@ const CreateProductPage = () => {
     }
     const handleUpdate = async () => {
         setLoading(true);
-        const response: any = await productsApi.update(productId,form.values);
+        const response: any = await productsApi.update(productId, form.values);
+        setError(response);
         if (response?.data?.success) {
             navigate(-1);
         }
@@ -82,19 +85,23 @@ const CreateProductPage = () => {
                     defaultValue={makeUrl(form.values.preview_product_image)}
                     onSelect={handleSelectFile}
                     label={'Product Image'}
-                    name='title'
+                    name='product_image'
+
+                errors={error}
                 />
             </div>
             <InputComponent
                 onInput={(event: any) => form.setFieldValue('title', event.target.value)}
                 defaultValue={form.values.title}
                 label={'Product name'}
+                errors={error}
                 name='title'
             />
             <InputComponent
                 onInput={(event: any) => form.setFieldValue('grass_price', event.target.value)}
                 defaultValue={form.values.grass_price}
                 type="number"
+                errors={error}
                 label={'grass price'}
                 name='grass_price'
             />
@@ -102,6 +109,7 @@ const CreateProductPage = () => {
                 onInput={(event: any) => form.setFieldValue('net_price', event.target.value)}
                 defaultValue={form.values.net_price}
                 type="number"
+                errors={error}
                 label={'net price'}
                 name='net_price'
             />
@@ -111,6 +119,7 @@ const CreateProductPage = () => {
                 type="number"
                 label={'discount'}
                 name='discount'
+                errors={error}
             />
             <div
                 className="col-span-2">
@@ -119,7 +128,8 @@ const CreateProductPage = () => {
                     defaultValue={form.values.description}
                     label={'description'}
                     textarea={true}
-                    name='title'
+                    errors={error}
+                    name='description'
                 />
             </div>
 

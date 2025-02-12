@@ -1,4 +1,5 @@
 import {InputHTMLAttributes, ReactElement, useState} from "react";
+import InputErrorComponent from "../InputErrorComponent.tsx";
 
 type Props = InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> & {
     label?: string;
@@ -6,8 +7,10 @@ type Props = InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> & {
     textarea?: boolean,
     value?: any,
     onSelect?: (file: any) => void,
+    name?: string,
+    errors?: any,
 };
-const FileInput = ({onSelect, label, suffix, value, ...props}: Props) => {
+const FileInput = ({onSelect, label, name, errors, suffix, value, ...props}: Props) => {
     const [fileBlob, setFile] = useState<any>(null);
     const handleSelectFile = (event: any) => {
         const file = event.target.files[0];
@@ -47,9 +50,12 @@ const FileInput = ({onSelect, label, suffix, value, ...props}: Props) => {
                     </label>
                 </div>
                 {(fileBlob || props.defaultValue) &&
-                    <img src={fileBlob??props.defaultValue} alt={'file'} className="h-20"/>
+                    <img src={fileBlob ?? props.defaultValue} alt={'file'} className="h-20"/>
                 }
             </div>
+            {
+                name && <InputErrorComponent className={'mt-1'} response={errors} name={name}/>
+            }
         </div>
     </>
 }

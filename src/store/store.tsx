@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage'
 // import {queryAPI} from './api/queries'
 import authSlice from './slice/authSlice.ts'
 import adminAuthSlice from "./slice/adminAuthSlice.ts";
+import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/es/constants";
 
 const appReducer = combineReducers({
     // [queryAPI.reducerPath]: queryAPI.reducer,
@@ -23,9 +24,16 @@ const persistedReducer = persistReducer(persistConfig, appReducer)
 
 export const store = configureStore({
     reducer: persistedReducer,
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore non-serializable actions
+            },
+        }),
     // middleware: (getDefaultMiddleware) =>
     //     getDefaultMiddleware({serializableCheck: false}).concat([queryAPI.middleware, mutationAPI.middleware]),
 })
+
 
 export const persist = persistStore(store)
 

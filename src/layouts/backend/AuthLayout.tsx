@@ -12,8 +12,8 @@ import {
     TransitionChild,
 } from '@headlessui/react'
 import {
+    ArrowLeftStartOnRectangleIcon,
     Bars3Icon,
-    Cog6ToothIcon,
     CubeIcon,
     HomeIcon,
     RectangleStackIcon,
@@ -38,9 +38,9 @@ const AuthLayout = (props: Props) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {loading,user} = useSelector((state: any) => state.adminAuth);
+    const {loading, user} = useSelector((state: any) => state.adminAuth);
     const userNavigation = [
-        {name: 'Your profile', href: '#'},
+        // {name: 'Your profile', href: '#'},
         {
             name: 'Sign out', action: () => handleLogout()
         },
@@ -96,7 +96,7 @@ const AuthLayout = (props: Props) => {
                             {/* Sidebar component, swap this element with another sidebar if you like */}
                             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                                 <div className="flex h-16 shrink-0 items-center">
-                                   LOGO
+                                    LOGO
                                 </div>
                                 <nav className="flex flex-1 flex-col">
                                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -129,16 +129,16 @@ const AuthLayout = (props: Props) => {
 
 
                                         <li className="mt-auto">
-                                            <a
-                                                href="#"
+                                            <div
+                                                onClick={handleLogout}
                                                 className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                             >
-                                                <Cog6ToothIcon
+                                                <ArrowLeftStartOnRectangleIcon
                                                     aria-hidden="true"
                                                     className="size-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
                                                 />
-                                                Settings
-                                            </a>
+                                                Logout
+                                            </div>
                                         </li>
                                     </ul>
                                 </nav>
@@ -153,7 +153,7 @@ const AuthLayout = (props: Props) => {
                     <div
                         className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
                         <div className="flex h-16 shrink-0 items-center">
-                           LOGO
+                            LOGO
                         </div>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -186,16 +186,16 @@ const AuthLayout = (props: Props) => {
 
 
                                 <li className="mt-auto">
-                                    <a
-                                        href="#"
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                                    <div
+                                        onClick={handleLogout}
+                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 cursor-pointer font-semibold text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
-                                        <Cog6ToothIcon
+                                        <ArrowLeftStartOnRectangleIcon
                                             aria-hidden="true"
                                             className="size-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
                                         />
-                                        Settings
-                                    </a>
+                                        Logout
+                                    </div>
                                 </li>
                             </ul>
                         </nav>
