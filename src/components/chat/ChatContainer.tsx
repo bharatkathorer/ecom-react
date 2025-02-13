@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import ChatComponent from "./ChatComponent.tsx";
 import socketService from "../../utils/socketioService.ts";
 import {useSelector} from "react-redux";
+import {toast} from "react-toastify";
 
 
 const ChatContainer = () => {
@@ -39,6 +40,7 @@ const ChatContainer = () => {
         setContacts((prevContacts: any) =>
             prevContacts.map((item: any) => {
                 if (String(item.id) === String(data.sender_id)) {
+                    toast(`${data.message} form ${item.receiver_name}`)
                     isContact = true;
                     return {
                         ...item,
@@ -60,6 +62,7 @@ const ChatContainer = () => {
             }
         );
         if (!isContact) {
+            toast(`new message received`)
             socketService.emit("loadUserList");
         }
         scrollToBottom();
