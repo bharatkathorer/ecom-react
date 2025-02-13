@@ -180,8 +180,8 @@ const CartPage = () => {
 
                                                 <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
                                                     <div
-                                                        className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                                                        <div>
+                                                        className="relative pr-9 sm:grid sm:grid-cols-3 sm:gap-x-6 sm:pr-0">
+                                                        <div className={'sm:col-span-2'}>
                                                             <div className="flex justify-between">
                                                                 <h3 className="text-sm">
                                                                     <a href={product.href}
@@ -190,11 +190,9 @@ const CartPage = () => {
                                                                     </a>
                                                                 </h3>
                                                             </div>
-                                                            <div className="mt-1 flex text-sm">
-                                                                <p className="text-gray-500 truncate">{product.description}</p>
-                                                                {product.size ? (
-                                                                    <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
-                                                                ) : null}
+                                                            <div className="mt-1 w-full text-sm">
+                                                                <p className="text-gray-500 truncate text-wrap line-clamp-2">{product.description}</p>
+
                                                             </div>
                                                             <div className="flex-row     space-x-2 ">
                                                                 <p className="mt-1 text-sm font-medium text-gray-900"> ₹{product.discount} Off</p>
