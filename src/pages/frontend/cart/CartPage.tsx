@@ -38,6 +38,7 @@ const CartPage = () => {
     })
 
     useEffect(() => {
+        setLoading(true);
         handleLoadCarts();
         handleLoadAddress();
     }, []);
@@ -46,7 +47,6 @@ const CartPage = () => {
         setSelectedDeliveryAddress(address.find((i: any) => i.is_default))
     }, [address]);
     const handleLoadCarts = async () => {
-        setLoading(true);
         const response: any = await productsApi.cartList();
         if (response?.data?.success) {
             setCartList(response.data.carts);
