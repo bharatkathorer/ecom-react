@@ -2,6 +2,7 @@ import {setLogin, setToken, setUser} from "../store/slice/authSlice.ts";
 import {setAdmin, setAdminLogin, setAdminToken} from "../store/slice/adminAuthSlice.ts";
 
 export const BASE_URL: string = 'https://ecommerce-vibx.onrender.com';
+// export const BASE_URL: string = 'https://ecom-node-js.vercel.app';
 
 export const makeUrl = (url: string): string => {
     if (url) {
