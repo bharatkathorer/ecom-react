@@ -22,6 +22,8 @@ class SocketClient implements SocketService {
         this.socket = io(BASE_URL, {
             autoConnect: false,
             auth: {token},
+            path: '/socket.io',
+            transports: ['websocket', 'polling']
         });
 
         this.socket.on("connect", () => console.log("Socket Connected"));
