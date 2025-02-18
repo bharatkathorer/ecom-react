@@ -1,5 +1,5 @@
 import {io, Socket} from "socket.io-client";
-import {BASE_URL} from "./const.tsx";
+import {BASE_URL_SOCKET} from "./const.tsx";
 
 interface SocketService {
     connect: () => void;
@@ -19,11 +19,11 @@ class SocketClient implements SocketService {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        this.socket = io(BASE_URL, {
-            autoConnect: false,
+        this.socket = io(BASE_URL_SOCKET, {
+            autoConnect: true,
             auth: {token},
             path: '/socket.io',
-            transports: ['websocket', 'polling']
+            // transports: ['websocket', 'polling']
         });
 
         this.socket.on("connect", () => console.log("Socket Connected"));
