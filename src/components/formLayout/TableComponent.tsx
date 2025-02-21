@@ -37,7 +37,7 @@ const TableComponent = ({
                         }: Props) => {
     return (
         <div className="px-4 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:items-center">
+            <div className="sm:flex ">
                 <div className="sm:flex-auto">
                     {title && <h1 className="text-base font-semibold text-gray-900">{title}</h1>}
                     {description && <p className="mt-2 text-sm text-gray-700">{description}</p>}

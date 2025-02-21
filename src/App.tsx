@@ -4,6 +4,8 @@ import WelcomePage from "./pages/WelcomePage.tsx";
 import {useSelector} from "react-redux";
 import ChatContainer from "./components/chat/ChatContainer.tsx";
 import {Bounce, ToastContainer} from "react-toastify";
+import NavbarComponent from "./layouts/frontend/NavbarComponent.tsx";
+import AdminNavbarLayout from "./layouts/backend/AdminNavbarLayout.tsx";
 
 function App() {
     const login = useSelector((state: any) => state.auth.login);
@@ -25,6 +27,11 @@ function App() {
             {
                 (login && !isAdmin) &&
                 <ChatContainer/>
+            }
+            {
+                isAdmin ?
+                    <AdminNavbarLayout/> :
+                    <NavbarComponent/>
             }
             <Routes>
                 <Route index path="/"
